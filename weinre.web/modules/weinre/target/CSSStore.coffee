@@ -50,21 +50,30 @@ module.exports = class CSSStore
         styleObject = @_buildMirrorForStyle(window.getComputedStyle(node), false)
         styleObject
 
+    #-----------------------------------------------------------------------------
+    _addRule: (node, cssRule, bucket) ->
+        if  _elementMatchesSelector(node, cssRule.selectorText)
+            object = {}
+
+            object.ruleId = @_getStyleRuleId(cssRule)
+            object.selectorText = cssRule.selectorText
+            object.style = @_buildMirrorForStyle(cssRule.style, true)
+            bucket.push(object)
+
+        if cssRule.cssRules
+            for cssRule in cssRule.cssRules
+                @_addRule(node, cssRule, bucket)
+
     #---------------------------------------------------------------------------
     getMatchedCSSRules: (node) ->
         result = []
 
-        try 
+        try
             for styleSheet in document.styleSheets
                 continue unless styleSheet.cssRules
 
                 for cssRule in styleSheet.cssRules
-                    continue unless _elementMatchesSelector(node, cssRule.selectorText)
-                    object = {}
-                    object.ruleId = @_getStyleRuleId(cssRule)
-                    object.selectorText = cssRule.selectorText
-                    object.style = @_buildMirrorForStyle(cssRule.style, true)
-                    result.push object
+                    @_addRule(node, cssRule, result)
         catch err
             return result
 
