@@ -149,7 +149,7 @@ module.exports = class RemotePanel extends WebInspector.Panel
             keys.push key
         keys = keys.sort()
         for key in keys
-            val = properties[key]
+            val = if key is 'basicAuth' then 'enabled' else properties[key]
             if typeof val == "string"
                 val = val.escapeHTML()
             else
