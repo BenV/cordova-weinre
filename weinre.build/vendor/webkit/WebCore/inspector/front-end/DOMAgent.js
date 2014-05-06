@@ -412,6 +412,7 @@ WebInspector.DOMAgent.prototype = {
     _childNodeCountUpdated: function(nodeId, newValue)
     {
         var node = this._idToDOMNode[nodeId];
+        if(!node){return}
         node._childNodeCount = newValue;
         var outline = WebInspector.panels.elements.treeOutline;
         var treeElement = outline.findTreeElement(node);
@@ -423,6 +424,7 @@ WebInspector.DOMAgent.prototype = {
     {
         var parent = this._idToDOMNode[parentId];
         var prev = this._idToDOMNode[prevId];
+        if(!parent){return}
         var node = parent._insertChild(prev, payload);
         this._idToDOMNode[node.id] = node;
         var event = { target : node, relatedNode : parent };
@@ -433,6 +435,7 @@ WebInspector.DOMAgent.prototype = {
     {
         var parent = this._idToDOMNode[parentId];
         var node = this._idToDOMNode[nodeId];
+        if(!parent){return}
         parent.removeChild_(node);
         var event = { target : node, relatedNode : parent };
         this.document._fireDomEvent("DOMNodeRemoved", event);
