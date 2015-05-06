@@ -140,7 +140,7 @@ startServer = () ->
 
     app.use jsonBodyParser()
 
-    basicAuth = options.basicAuth.split(':')
+    basicAuth = if options.basicAuth then options.basicAuth.split(':') else []
     if basicAuth.length is 2
         app.use '/client', express.basicAuth(basicAuth[0], basicAuth[1])
 

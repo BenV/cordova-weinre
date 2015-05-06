@@ -43,6 +43,7 @@ exports.run = ->
         debug:        Boolean
         readTimeout:  Number
         deathTimeout: Number
+        basicAuth:    String
         help:         Boolean
 
     shortHands =
@@ -68,6 +69,9 @@ exports.run = ->
     if !opts.deathTimeout?
         opts.deathTimeout = 3 * opts.readTimeout
 
+    if !opts.basicAuth?
+        opts.basicAuth = ''
+
     utils.setOptions opts
 
     weinre.run opts
@@ -91,6 +95,7 @@ options:
     --debug        print even more diagnostics           default: #{optionDefaults.debug}
     --readTimeout  seconds to wait for a client message  default: #{optionDefaults.readTimeout}
     --deathTimeout seconds to wait to kill client        default: 3*readTimeout
+    --basicAuth    <username>:<password> basic auth      default: none
 
 --boundHost can be an ip address, hostname, or -all-, where -all-
 means binding to all ip address on the current machine'

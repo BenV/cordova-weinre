@@ -48,6 +48,7 @@ processOptions = function(options, cb) {
   options.debug = utils.ensureBoolean(options.debug, 'the value of the option debug is not a boolean');
   options.readTimeout = utils.ensureInteger(options.readTimeout, 'the value of the option readTimeout is not a number');
   options.deathTimeout = utils.ensureInteger(options.deathTimeout, 'the value of the option deathTimeout is not a number');
+  options.basicAuth = utils.ensureString(options.basicAuth, 'the value of the option basicAuth is not a string');
   if (options.debug) {
     options.verbose = true;
   }
@@ -71,6 +72,7 @@ processOptions = function(options, cb) {
   utils.logVerbose("   debug:        " + options.debug);
   utils.logVerbose("   readTimeout:  " + options.readTimeout);
   utils.logVerbose("   deathTimeout: " + options.deathTimeout);
+  utils.logVerbose("   basicAuth:    " + options.basicAuth);
   utils.setOptions(options);
   return checkHost(options.boundHost, function(err) {
     if (err) {
@@ -117,7 +119,7 @@ checkForDeath = function() {
 };
 
 startServer = function() {
-  var app, clientHandler, favIcon, options, staticCacheOptions, targetHandler;
+  var app, basicAuth, clientHandler, favIcon, options, staticCacheOptions, targetHandler;
   options = utils.options;
   clientHandler = new HttpChannelHandler('/ws/client');
   targetHandler = new HttpChannelHandler('/ws/target');
@@ -133,6 +135,10 @@ startServer = function() {
   });
   app.use(express.favicon(favIcon));
   app.use(jsonBodyParser());
+  basicAuth = options.basicAuth ? options.basicAuth.split(':') : [];
+  if (basicAuth.length === 2) {
+    app.use('/client', express.basicAuth(basicAuth[0], basicAuth[1]));
+  }
   app.all(/^\/ws\/client(.*)/, function(request, response, next) {
     var uri;
     uri = request.params[0];

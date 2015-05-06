@@ -30,6 +30,7 @@ exports.run = function() {
     debug: Boolean,
     readTimeout: Number,
     deathTimeout: Number,
+    basicAuth: String,
     help: Boolean
   };
   shortHands = {
@@ -50,6 +51,9 @@ exports.run = function() {
   if (opts.deathTimeout == null) {
     opts.deathTimeout = 3 * opts.readTimeout;
   }
+  if (opts.basicAuth == null) {
+    opts.basicAuth = '';
+  }
   utils.setOptions(opts);
   return weinre.run(opts);
 };
@@ -61,7 +65,7 @@ printNoptError = function(key, val, types) {
 printHelp = function() {
   var version;
   version = weinre.getVersion();
-  console.error("usage:   " + utils.Program + " [options]\nversion: " + version + "\n\noptions:\n    --httpPort     port to run the http server on        default: " + optionDefaults.httpPort + "\n    --boundHost    ip address to bind the server to      default: " + optionDefaults.boundHost + "\n    --verbose      print more diagnostics                default: " + optionDefaults.verbose + "\n    --debug        print even more diagnostics           default: " + optionDefaults.debug + "\n    --readTimeout  seconds to wait for a client message  default: " + optionDefaults.readTimeout + "\n    --deathTimeout seconds to wait to kill client        default: 3*readTimeout\n\n--boundHost can be an ip address, hostname, or -all-, where -all-\nmeans binding to all ip address on the current machine'\n\nfor more info see: http://people.apache.org/~pmuellr/weinre/");
+  console.error("usage:   " + utils.Program + " [options]\nversion: " + version + "\n\noptions:\n    --httpPort     port to run the http server on        default: " + optionDefaults.httpPort + "\n    --boundHost    ip address to bind the server to      default: " + optionDefaults.boundHost + "\n    --verbose      print more diagnostics                default: " + optionDefaults.verbose + "\n    --debug        print even more diagnostics           default: " + optionDefaults.debug + "\n    --readTimeout  seconds to wait for a client message  default: " + optionDefaults.readTimeout + "\n    --deathTimeout seconds to wait to kill client        default: 3*readTimeout\n    --basicAuth    <username>:<password> basic auth      default: none\n\n--boundHost can be an ip address, hostname, or -all-, where -all-\nmeans binding to all ip address on the current machine'\n\nfor more info see: http://people.apache.org/~pmuellr/weinre/");
   return process.exit();
 };
 
