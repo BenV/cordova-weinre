@@ -75,6 +75,8 @@ module.exports = class Console
 
     #---------------------------------------------------------------------------
     _generic: (level, messageParts) ->
+        return if !messageParts?.length
+
         message = messageParts[0].toString()
         parameters = []
 
@@ -168,7 +170,7 @@ module.exports = class Console
 
 #-------------------------------------------------------------------------------
 RemoteConsole   = new Console()
-OriginalConsole = window.console
+OriginalConsole = window.console or {}
 
 RemoteConsole.__original   = OriginalConsole
 OriginalConsole.__original = OriginalConsole
